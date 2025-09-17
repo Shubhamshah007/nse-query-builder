@@ -1,0 +1,398 @@
+{
+  "info": {
+    "name": "NSE Query Builder Backend API",
+    "description": "Complete API collection for testing NSE Query Builder backend deployed on Render",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://nse-query-builder-backend.onrender.com",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check & Documentation",
+      "item": [
+        {
+          "name": "Health Check - Available Queries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/available-queries",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "available-queries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Sectors",
+          "request": {
+            "method": "GET", 
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/available-sectors",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "available-sectors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test POST Endpoint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"test\": \"Hello from Postman\",\n  \"timestamp\": \"2025-01-17T20:14:55Z\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/test",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "test"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Simple Query Builder",
+      "item": [
+        {
+          "name": "Execute Simple Query - Field to Field",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"field1\": \"current_call_iv\",\n    \"operator\": \"gt\",\n    \"field2\": \"similar_results_avg_iv\"\n  }\n]"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/execute",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "execute"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Simple Query - Field to Value",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"field1\": \"current_call_iv\",\n    \"operator\": \"gt\",\n    \"value\": 25\n  }\n]"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/execute",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "execute"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Simple Query - High Value Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"field1\": \"current_call_iv\",\n    \"operator\": \"gt\",\n    \"value\": 999999\n  }\n]"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/execute",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "execute"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Simple Query - Less Than",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"field1\": \"current_call_iv\",\n    \"operator\": \"lt\",\n    \"value\": 50\n  }\n]"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/execute",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "execute"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pre-built IV Queries",
+      "item": [
+        {
+          "name": "Current IV > 3 Months Average",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/current-iv-gt-3months",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "current-iv-gt-3months"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current IV > 1 Week Average",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/current-iv-gt-1week",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "current-iv-gt-1week"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current IV > Yesterday's Closing IV + 10%",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/current-iv-gt-yesterday-10percent",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "current-iv-gt-yesterday-10percent"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current IV > Today 9:30 AM IV + 10%",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/current-iv-gt-today930-10percent",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "current-iv-gt-today930-10percent"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sector-wise IV Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/sector-wise-iv?sectors=Banking,IT Services,Oil & Gas",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "sector-wise-iv"],
+              "query": [
+                {
+                  "key": "sectors",
+                  "value": "Banking,IT Services,Oil & Gas"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Queries",
+      "item": [
+        {
+          "name": "Dynamic IV Comparison - 14 Days",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/dynamic-iv-comparison/14?operator=gt",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "dynamic-iv-comparison", "14"],
+              "query": [
+                {
+                  "key": "operator",
+                  "value": "gt"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Dynamic IV Comparison - 21 Days Less Than",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/dynamic-iv/21/less-than",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "dynamic-iv", "21", "less-than"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current IV < 30 Days Average",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/current-iv-lt-30days",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "current-iv-lt-30days"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Query Builder",
+      "item": [
+        {
+          "name": "Get Query Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/dynamic/schema",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "dynamic", "schema"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Complex Dynamic Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groups\": [\n    {\n      \"conditions\": [\n        {\n          \"field1\": \"current_call_iv\",\n          \"operator\": \"GREATER_THAN\",\n          \"field2\": \"similar_results_avg_iv\",\n          \"percentageThreshold\": 20\n        }\n      ],\n      \"filters\": [\n        {\n          \"field\": \"instrument_type\",\n          \"operator\": \"EQUALS\",\n          \"value\": \"STOCK\"\n        }\n      ],\n      \"logicalOperator\": \"AND\"\n    }\n  ],\n  \"groupLogicalOperator\": \"AND\",\n  \"sortBy\": \"percentageChange\",\n  \"sortOrder\": \"DESC\",\n  \"limit\": 50\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/dynamic/execute",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "dynamic", "execute"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Dynamic Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groups\": [\n    {\n      \"conditions\": [\n        {\n          \"field1\": \"current_call_iv\",\n          \"operator\": \"GREATER_THAN\",\n          \"value\": 25\n        }\n      ],\n      \"filters\": [],\n      \"logicalOperator\": \"AND\"\n    }\n  ],\n  \"groupLogicalOperator\": \"AND\",\n  \"limit\": 10\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/dynamic/validate",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "dynamic", "validate"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Future Endpoints",
+      "item": [
+        {
+          "name": "High Volume IV Spikes (Future)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/future/high-volume-iv-spikes",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "future", "high-volume-iv-spikes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ATM Options Analysis (Future)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/future/atm-options-analysis",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "future", "atm-options-analysis"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "High Delta Gamma Options (Future)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/query-builder/future/high-delta-gamma-options",
+              "host": ["{{BASE_URL}}"],
+              "path": ["query-builder", "future", "high-delta-gamma-options"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

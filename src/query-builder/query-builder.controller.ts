@@ -136,108 +136,284 @@ export class QueryBuilderController {
   @Get('available-queries')
   getAvailableQueries() {
     return {
-      message: 'NSE Query Builder - Advanced IV Analysis Queries',
-      queries: [
+      message: 'NSE Query Builder - Complete API Documentation',
+      version: '2.0.0',
+      baseUrl: 'https://nse-query-builder-backend.onrender.com',
+      lastUpdated: new Date().toISOString(),
+      
+      // Simple Query Builder - Main Frontend Integration
+      simpleQueryBuilder: {
+        description: 'Primary endpoint used by React frontend for dynamic queries',
+        endpoint: '/query-builder/execute',
+        method: 'POST',
+        contentType: 'application/json',
+        examples: [
+          {
+            name: 'Field to Field Comparison',
+            body: '[{"field1": "current_call_iv", "operator": "gt", "field2": "similar_results_avg_iv"}]'
+          },
+          {
+            name: 'Field to Value Comparison',
+            body: '[{"field1": "current_call_iv", "operator": "gt", "value": 25}]'
+          },
+          {
+            name: 'Less Than Query',
+            body: '[{"field1": "current_call_iv", "operator": "lt", "value": 50}]'
+          }
+        ]
+      },
+
+      // Pre-built IV Comparison Queries
+      ivComparisonQueries: [
         {
           id: 1,
           endpoint: '/query-builder/current-iv-gt-3months',
-          description: 'Stocks with Current IV > 3 months avg (exclude expiry week & result month)',
-          parameters: 'excludeResultMonth=true/false'
+          method: 'GET',
+          description: 'Current IV > 3 months average (90-day historical avg from nse_vol)',
+          parameters: 'excludeResultMonth=true/false (optional)'
         },
         {
           id: 2,
           endpoint: '/query-builder/current-iv-gt-1week',
-          description: 'Stocks with Current IV > 1 week avg (exclude expiry week)'
+          method: 'GET',
+          description: 'Current IV > 1 week average (7-day historical avg from nse_vol)'
         },
         {
           id: 3,
           endpoint: '/query-builder/current-iv-gt-yesterday-10percent',
-          description: 'Stocks with Current IV > 10% of yesterday\'s closing IV'
+          method: 'GET',
+          description: 'Current IV > 10% of yesterday closing IV'
         },
         {
           id: 4,
           endpoint: '/query-builder/current-iv-gt-today930-10percent',
-          description: 'Stocks with Current IV > 10% of today\'s 9:30 AM IV'
+          method: 'GET',
+          description: 'Current IV > 10% of today 9:30 AM IV'
         },
         {
           id: 5,
-          endpoint: '/query-builder/sector-wise-iv',
-          description: 'Selected sector wise IV analysis',
-          parameters: 'sectors=Banking,IT Services,Oil & Gas (comma-separated)'
+          endpoint: '/query-builder/similar-result-avg-gt-current',
+          method: 'GET',
+          description: 'Similar result month average IV > current IV'
         },
         {
           id: 6,
-          endpoint: '/query-builder/similar-result-avg-gt-current',
-          description: 'Stocks where similar result month avg IV > current IV'
+          endpoint: '/query-builder/similar-result-avg-lt-current',
+          method: 'GET',
+          description: 'Similar result month average IV < current IV'
         },
         {
           id: 7,
-          endpoint: '/query-builder/similar-result-avg-lt-current',
-          description: 'Stocks where similar result month avg IV < current IV'
+          endpoint: '/query-builder/this-month-results-high-iv',
+          method: 'GET',
+          description: 'Results in this month with similar result avg IV < current IV'
         },
         {
           id: 8,
-          endpoint: '/query-builder/this-month-results-high-iv',
-          description: 'Stocks with result in this month and similar result avg IV < current IV'
+          endpoint: '/query-builder/index-current-iv-gt-weekly',
+          method: 'GET',
+          description: 'Index current IV > last week IV'
         },
         {
           id: 9,
-          endpoint: '/query-builder/index-current-iv-gt-weekly',
-          description: 'Indices with current IV > last one week\'s IV'
-        },
-        {
-          id: 10,
           endpoint: '/query-builder/index-current-iv-lt-weekly',
-          description: 'Indices with current IV < last one week\'s IV'
+          method: 'GET',
+          description: 'Index current IV < last week IV'
         }
       ],
-      utilities: [
-        {
-          endpoint: '/query-builder/available-sectors',
-          description: 'Get all available sectors for filtering'
-        },
-        {
-          endpoint: '/query-builder/available-queries',
-          description: 'Get this documentation of all available queries'
-        }
-      ],
+
+      // Less Than Queries (Dynamic Historical Averages)
       lessThanQueries: [
         {
-          id: 11,
+          id: 10,
           endpoint: '/query-builder/current-iv-lt-3months',
-          description: 'Stocks with Current IV < 3 months avg (dynamic from nse_vol)'
+          method: 'GET',
+          description: 'Current IV < 3 months average (90-day from nse_vol)'
+        },
+        {
+          id: 11,
+          endpoint: '/query-builder/current-iv-lt-1week',
+          method: 'GET',
+          description: 'Current IV < 1 week average (7-day from nse_vol)'
         },
         {
           id: 12,
-          endpoint: '/query-builder/current-iv-lt-1week',
-          description: 'Stocks with Current IV < 1 week avg (dynamic from nse_vol)'
+          endpoint: '/query-builder/current-iv-lt-21days',
+          method: 'GET',
+          description: 'Current IV < 21 days average (from nse_vol)'
         },
         {
           id: 13,
-          endpoint: '/query-builder/current-iv-lt-21days',
-          description: 'Stocks with Current IV < 21 days avg (dynamic from nse_vol)'
-        },
-        {
-          id: 14,
           endpoint: '/query-builder/current-iv-lt-30days',
-          description: 'Stocks with Current IV < 30 days avg (dynamic from nse_vol)'
+          method: 'GET',
+          description: 'Current IV < 30 days average (from nse_vol)'
         }
       ],
-      dynamicQuery: [
+
+      // Dynamic IV Comparison Queries
+      dynamicQueries: [
         {
-          endpoint: '/query-builder/dynamic/execute',
-          description: 'Execute dynamic query with custom conditions and filters',
-          method: 'POST'
+          id: 14,
+          endpoint: '/query-builder/dynamic-iv-comparison/:days',
+          method: 'GET',
+          description: 'Dynamic IV comparison for any number of days (1-365)',
+          parameters: 'operator=gt|lt|eq (optional, default: gt)',
+          example: '/query-builder/dynamic-iv-comparison/14?operator=gt'
         },
         {
+          id: 15,
+          endpoint: '/query-builder/dynamic-iv/:days/greater-than',
+          method: 'GET',
+          description: 'Current IV > N-day average (shorthand)',
+          example: '/query-builder/dynamic-iv/14/greater-than'
+        },
+        {
+          id: 16,
+          endpoint: '/query-builder/dynamic-iv/:days/less-than',
+          method: 'GET',
+          description: 'Current IV < N-day average (shorthand)',
+          example: '/query-builder/dynamic-iv/21/less-than'
+        }
+      ],
+
+      // Sector Analysis
+      sectorAnalysis: [
+        {
+          id: 17,
+          endpoint: '/query-builder/sector-wise-iv',
+          method: 'GET',
+          description: 'Sector-wise IV analysis with filtering',
+          parameters: 'sectors=Banking,IT Services,Oil & Gas (comma-separated)',
+          example: '/query-builder/sector-wise-iv?sectors=Banking,IT%20Services'
+        }
+      ],
+
+      // Advanced Dynamic Query Builder
+      advancedDynamicQuery: [
+        {
+          id: 18,
+          endpoint: '/query-builder/dynamic/execute',
+          method: 'POST',
+          description: 'Execute complex dynamic query with multiple conditions and filters',
+          contentType: 'application/json'
+        },
+        {
+          id: 19,
+          endpoint: '/query-builder/dynamic/validate',
+          method: 'POST',
+          description: 'Validate dynamic query structure before execution'
+        },
+        {
+          id: 20,
+          endpoint: '/query-builder/dynamic/schema',
+          method: 'GET',
+          description: 'Get query builder schema with available fields and operators'
+        },
+        {
+          id: 21,
           endpoint: '/query-builder/dynamic/templates',
+          method: 'GET',
           description: 'Get all available query templates'
         },
         {
+          id: 22,
           endpoint: '/query-builder/dynamic/templates/:id',
+          method: 'GET',
           description: 'Get specific query template by ID'
         }
-      ]
+      ],
+
+      // Future Endpoints (Live Options Integration)
+      futureEndpoints: [
+        {
+          id: 23,
+          endpoint: '/query-builder/future/high-volume-iv-spikes',
+          method: 'GET',
+          description: 'High option volume with IV spikes (joins market_summary + live_option_strikes)',
+          status: 'Available - Ready for live_option_strikes data'
+        },
+        {
+          id: 24,
+          endpoint: '/query-builder/future/atm-options-analysis',
+          method: 'GET',
+          description: 'ATM options analysis with current IV comparison',
+          status: 'Available - Ready for live_option_strikes data'
+        },
+        {
+          id: 25,
+          endpoint: '/query-builder/future/high-delta-gamma-options',
+          method: 'GET',
+          description: 'Options with high delta and gamma values',
+          status: 'Available - Ready for live_option_strikes data'
+        }
+      ],
+
+      // Utility Endpoints
+      utilities: [
+        {
+          id: 26,
+          endpoint: '/query-builder/available-sectors',
+          method: 'GET',
+          description: 'Get all available sectors from database'
+        },
+        {
+          id: 27,
+          endpoint: '/query-builder/available-queries',
+          method: 'GET',
+          description: 'Get this complete API documentation'
+        },
+        {
+          id: 28,
+          endpoint: '/query-builder/test',
+          method: 'POST',
+          description: 'Test POST endpoint for connectivity verification'
+        }
+      ],
+
+      // Database Schema Information
+      databaseSchema: {
+        tables: {
+          market_summary: {
+            description: 'Main options data with current IV values',
+            keyColumns: ['symbol', 'sector', 'current_call_iv', 'current_put_iv', 'instrument_type']
+          },
+          nse_vol: {
+            description: 'Historical volume and IV data for dynamic averages',
+            keyColumns: ['symbol', 'date', 'ATM_vol']
+          },
+          live_option_strikes: {
+            description: 'Live options data with Greeks (future integration)',
+            keyColumns: ['symbol', 'strike', 'call_iv', 'put_iv', 'call_delta', 'put_delta'],
+            status: 'Ready for integration'
+          }
+        },
+        supportedFields: [
+          'current_call_iv', 'current_put_iv', 'similar_results_avg_iv',
+          'yesterday_close_call_iv', 'today_930_call_iv', 'current_price',
+          'symbol', 'sector', 'instrument_type'
+        ],
+        supportedOperators: ['gt', 'lt', 'gte', 'lte', 'eq', 'ne']
+      },
+
+      // Response Format
+      responseFormat: {
+        success: {
+          results: 'Array of matching records',
+          debugInfo: {
+            queryObject: 'Original query structure',
+            sqlQuery: 'Generated SQL query',
+            executionTime: 'Query execution time in ms',
+            appliedFilters: 'Applied filters array',
+            queryComplexity: 'Simple|Moderate|Complex',
+            tablesUsed: 'Array of database tables used',
+            indexesUsed: 'Array of database indexes used'
+          }
+        },
+        emptyResults: {
+          results: '[] (empty array when no matches found)',
+          debugInfo: 'Same structure as success response'
+        }
+      }
     };
   }
 
