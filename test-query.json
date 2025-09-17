@@ -1,0 +1,19 @@
+{
+  "groups": [{
+    "conditions": [{
+      "field1": "current_call_iv",
+      "operator": "gt",
+      "field2": "avg_7day_call_iv"
+    }],
+    "filters": [{
+      "field": "instrument_type",
+      "operator": "eq",
+      "value": "STOCK"
+    }],
+    "logicalOperator": "and"
+  }],
+  "groupLogicalOperator": "and",
+  "sortBy": "currentCallIv",
+  "sortOrder": "DESC",
+  "limit": 10
+}
