@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend-Backend Integration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+        .mock-data { background: #ffe6e6; border-left: 4px solid #ff4444; }
+        .real-data { background: #e6ffe6; border-left: 4px solid #44ff44; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>QueryBuilder Integration Test</h1>
+    
+    <div>
+        <h3>Test Query: current_call_iv > 999999</h3>
+        <button onclick="testBackendDirect()">Test Backend Direct</button>
+        <button onclick="testFrontendAPI()">Test Frontend API</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        async function testBackendDirect() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Testing backend directly...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:3000/query-builder/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([{
+                        field1: 'current_call_iv',
+                        operator: 'gt',
+                        value: 999999
+                    }])
+                });
+                
+                const data = await response.json();
+                
+                const isMock = data.dataSource === 'MOCK_DATA';
+                resultsDiv.innerHTML = `
+                    <div class="result ${isMock ? 'mock-data' : 'real-data'}">
+                        <h4>Backend Direct Test Result</h4>
+                        <p><strong>Data Source:</strong> ${data.dataSource}</p>
+                        <p><strong>Message:</strong> ${data.message}</p>
+                        <p><strong>Results Count:</strong> ${data.results?.length || 0}</p>
+                        <p><strong>First Symbol:</strong> ${data.results?.[0]?.symbol || 'N/A'}</p>
+                        <p><strong>Mock Flag:</strong> ${data.results?.[0]?._isMockData || 'N/A'}</p>
+                        <p><strong>Execution Time:</strong> ${data.debugInfo?.executionTime || 'N/A'}ms</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="result" style="background: #ffcccc;"><h4>Error</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function testFrontendAPI() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Testing frontend API (simulated)...</p>';
+            
+            // This simulates what the frontend would do
+            try {
+                const conditions = [{
+                    field1: 'current_call_iv',
+                    operator: 'gt',
+                    value: 999999
+                }];
+                
+                const response = await fetch('http://localhost:3000/query-builder/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(conditions)
+                });
+                
+                const backendData = await response.json();
+                
+                // Simulate frontend transformation
+                const results = (backendData.results || []).map((item) => ({
+                    symbol: item.symbol || 'N/A',
+                    sector: item.sector || 'Unknown',
+                    currentCallIv: item.currentCallIv,
+                    comparisonValue: item.comparisonValue,
+                    difference: item.difference,
+                    isMockData: item._isMockData,
+                    mockReason: item._mockReason
+                }));
+                
+                const isMock = backendData.dataSource === 'MOCK_DATA';
+                resultsDiv.innerHTML = `
+                    <div class="result ${isMock ? 'mock-data' : 'real-data'}">
+                        <h4>Frontend API Test Result</h4>
+                        <p><strong>Data Source:</strong> ${backendData.dataSource}</p>
+                        <p><strong>Message:</strong> ${backendData.message}</p>
+                        <p><strong>Transformed Results:</strong> ${results.length}</p>
+                        <div style="margin-top: 10px;">
+                            <h5>Sample Results:</h5>
+                            ${results.slice(0, 3).map(r => `
+                                <div style="background: white; margin: 5px 0; padding: 5px; border-radius: 3px;">
+                                    📈 ${r.symbol} | Sector: ${r.sector} | IV: ${r.currentCallIv} | Mock: ${r.isMockData}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="result" style="background: #ffcccc;"><h4>Error</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        // Auto-test when page loads
+        window.onload = () => {
+            testBackendDirect();
+        };
+    </script>
+</body>
+</html>

@@ -28,20 +28,8 @@ export class MarketSummary {
   @Column('float', { default: 0, name: 'current_price' })
   currentPrice: number;
 
-  @Column('float', { default: 0, name: 'avg_7day_call_iv' })
-  avg7dayCallIv: number;
-
-  @Column('float', { default: 0, name: 'avg_21day_call_iv' })
-  avg21dayCallIv: number;
-
-  @Column('float', { default: 0, name: 'avg_90day_call_iv' })
-  avg90dayCallIv: number;
-
   @Column('float', { default: 0, name: 'yesterday_close_call_iv' })
   yesterdayCloseCallIv: number;
-
-  @Column('float', { default: 0, name: 'yesterday_close_price' })
-  yesterdayClosePrice: number;
 
   @Column('float', { default: 0, name: 'today_930_call_iv' })
   today930CallIv: number;

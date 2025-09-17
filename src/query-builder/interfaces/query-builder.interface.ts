@@ -17,12 +17,31 @@ export enum LogicalOperator {
 export enum IVField {
   CURRENT_CALL_IV = 'current_call_iv',
   CURRENT_PUT_IV = 'current_put_iv',
-  AVG_7DAY_CALL_IV = 'avg_7day_call_iv',
-  AVG_21DAY_CALL_IV = 'avg_21day_call_iv',
-  AVG_90DAY_CALL_IV = 'avg_90day_call_iv',
   YESTERDAY_CLOSE_CALL_IV = 'yesterday_close_call_iv',
   TODAY_930_CALL_IV = 'today_930_call_iv',
   SIMILAR_RESULTS_AVG_IV = 'similar_results_avg_iv',
+  CURRENT_PRICE = 'current_price',
+}
+
+// LiveOptionStrikes specific fields for future queries
+export enum OptionStrikeField {
+  STRIKE = 'strike',
+  CALL_LTP = 'call_ltp',
+  CALL_VOLUME = 'call_volume',
+  CALL_IV = 'call_iv',
+  CALL_DELTA = 'call_delta',
+  CALL_THETA = 'call_theta',
+  CALL_GAMMA = 'call_gamma',
+  CALL_VEGA = 'call_vega',
+  PUT_LTP = 'put_ltp',
+  PUT_VOLUME = 'put_volume',
+  PUT_IV = 'put_iv',
+  PUT_DELTA = 'put_delta',
+  PUT_THETA = 'put_theta',
+  PUT_GAMMA = 'put_gamma',
+  PUT_VEGA = 'put_vega',
+  IS_ATM = 'is_atm',
+  EXPIRY = 'expiry',
 }
 
 export enum FilterField {
@@ -106,7 +125,7 @@ export const QUERY_TEMPLATES: QueryTemplate[] = [
         conditions: [{
           field1: IVField.CURRENT_CALL_IV,
           operator: ComparisonOperator.PERCENTAGE_CHANGE_GT,
-          field2: IVField.AVG_90DAY_CALL_IV,
+          field2: IVField.SIMILAR_RESULTS_AVG_IV,
           percentageThreshold: 20
         }],
         filters: [{
@@ -164,7 +183,7 @@ export const QUERY_TEMPLATES: QueryTemplate[] = [
         conditions: [{
           field1: IVField.CURRENT_CALL_IV,
           operator: ComparisonOperator.GREATER_THAN,
-          field2: IVField.AVG_21DAY_CALL_IV
+          field2: IVField.SIMILAR_RESULTS_AVG_IV
         }],
         filters: [{
           field: FilterField.SECTOR,

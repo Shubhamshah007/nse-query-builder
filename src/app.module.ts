@@ -3,12 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StocksModule } from './stocks/stocks.module';
-import { PriceDataModule } from './price-data/price-data.module';
 import { QueryBuilderModule } from './query-builder/query-builder.module';
-import { AnalyticsModule } from './analytics/analytics.module';
-import { Stock, PriceData, MarketIndex, IndexData, LatestData, LiveInstrumentData, LiveOptionStrikes, MarketSummary } from './entities';
-import { OptionsModule } from './options/options.module';
+import { MarketSummary } from './entities';
 
 @Module({
   imports: [
@@ -21,7 +17,7 @@ import { OptionsModule } from './options/options.module';
         ? {
             type: 'postgres',
             url: process.env.DATABASE_URL,
-            entities: [Stock, PriceData, MarketIndex, IndexData, LatestData, LiveInstrumentData, LiveOptionStrikes, MarketSummary],
+            entities: [MarketSummary],
             synchronize: true, // Temporarily enable to create tables
             logging: process.env.DATABASE_LOGGING === 'true',
             ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
@@ -33,7 +29,7 @@ import { OptionsModule } from './options/options.module';
             username: process.env.DATABASE_USER || 'root',
             password: process.env.DATABASE_PASSWORD || '',
             database: process.env.DATABASE_NAME || 'option_data',
-            entities: [Stock, PriceData, MarketIndex, IndexData, LatestData, LiveInstrumentData, LiveOptionStrikes, MarketSummary],
+            entities: [MarketSummary],
             synchronize: false,
             logging: process.env.DATABASE_LOGGING === 'true',
             extra: {
@@ -41,11 +37,7 @@ import { OptionsModule } from './options/options.module';
             },
           }
     ),
-    StocksModule,
-    PriceDataModule,
     QueryBuilderModule,
-    AnalyticsModule,
-    OptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

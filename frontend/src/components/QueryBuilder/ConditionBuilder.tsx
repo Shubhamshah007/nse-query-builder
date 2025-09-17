@@ -38,7 +38,7 @@ const ConditionBuilder: React.FC<ConditionBuilderProps> = ({ query, onChange }) 
     const newCondition: QueryCondition = {
       field1: IVField.CURRENT_CALL_IV,
       operator: ComparisonOperator.GREATER_THAN,
-      field2: IVField.AVG_21DAY_CALL_IV,
+      field2: IVField.SIMILAR_RESULTS_AVG_IV,
     };
 
     const updatedQuery = { ...query };

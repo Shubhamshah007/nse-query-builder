@@ -502,32 +502,32 @@ const SimpleQueryBuilder: React.FC = () => {
   };
 
   const ivFields = [
-    // Current IV Fields
-    { value: 'current_call_iv', label: 'Current Call IV', category: 'Current' },
-    { value: 'current_put_iv', label: 'Current Put IV', category: 'Current' },
+    // Current Market Summary Fields (Available in database)
+    { value: 'current_call_iv', label: 'Current Call IV', category: 'Market Summary' },
+    { value: 'current_put_iv', label: 'Current Put IV', category: 'Market Summary' },
+    { value: 'current_price', label: 'Current Price', category: 'Market Summary' },
+    { value: 'yesterday_close_call_iv', label: 'Yesterday Close Call IV', category: 'Market Summary' },
+    { value: 'today_930_call_iv', label: 'Today 9:30 Call IV', category: 'Market Summary' },
+    { value: 'similar_results_avg_iv', label: 'Similar Results Avg IV', category: 'Market Summary' },
     
-    // Historical Average IV Fields  
-    { value: 'avg_7day_call_iv', label: '7-Day Avg Call IV', category: 'Historical' },
-    { value: 'avg_14day_call_iv', label: '14-Day Avg Call IV', category: 'Historical' },
-    { value: 'avg_21day_call_iv', label: '21-Day Avg Call IV', category: 'Historical' },
-    { value: 'avg_30day_call_iv', label: '30-Day Avg Call IV', category: 'Historical' },
-    { value: 'avg_60day_call_iv', label: '60-Day Avg Call IV', category: 'Historical' },
-    { value: 'avg_90day_call_iv', label: '90-Day Avg Call IV', category: 'Historical' },
+    // Historical Averages (Calculated from nse_vol table)
+    { value: 'nse_vol_7day_avg', label: '7-Day Historical Avg (from nse_vol)', category: 'Historical' },
+    { value: 'nse_vol_14day_avg', label: '14-Day Historical Avg (from nse_vol)', category: 'Historical' },
+    { value: 'nse_vol_21day_avg', label: '21-Day Historical Avg (from nse_vol)', category: 'Historical' },
+    { value: 'nse_vol_30day_avg', label: '30-Day Historical Avg (from nse_vol)', category: 'Historical' },
+    { value: 'nse_vol_60day_avg', label: '60-Day Historical Avg (from nse_vol)', category: 'Historical' },
+    { value: 'nse_vol_90day_avg', label: '90-Day Historical Avg (from nse_vol)', category: 'Historical' },
     
-    { value: 'avg_7day_put_iv', label: '7-Day Avg Put IV', category: 'Historical' },
-    { value: 'avg_14day_put_iv', label: '14-Day Avg Put IV', category: 'Historical' },
-    { value: 'avg_21day_put_iv', label: '21-Day Avg Put IV', category: 'Historical' },
-    { value: 'avg_30day_put_iv', label: '30-Day Avg Put IV', category: 'Historical' },
-    { value: 'avg_60day_put_iv', label: '60-Day Avg Put IV', category: 'Historical' },
-    { value: 'avg_90day_put_iv', label: '90-Day Avg Put IV', category: 'Historical' },
+    // LiveOptionStrikes Fields (Future use)
+    { value: 'call_ltp', label: 'Call LTP (Live Options)', category: 'Live Options' },
+    { value: 'put_ltp', label: 'Put LTP (Live Options)', category: 'Live Options' },
+    { value: 'call_volume', label: 'Call Volume (Live Options)', category: 'Live Options' },
+    { value: 'put_volume', label: 'Put Volume (Live Options)', category: 'Live Options' },
+    { value: 'call_iv', label: 'Call IV (Live Options)', category: 'Live Options' },
+    { value: 'put_iv', label: 'Put IV (Live Options)', category: 'Live Options' },
+    { value: 'strike', label: 'Strike Price (Live Options)', category: 'Live Options' },
     
-    // Intraday IV Fields
-    { value: 'yesterday_close_call_iv', label: 'Yesterday Close Call IV', category: 'Intraday' },
-    { value: 'today_930_call_iv', label: 'Today 9:30 Call IV', category: 'Intraday' },
-    { value: 'yesterday_close_put_iv', label: 'Yesterday Close Put IV', category: 'Intraday' },
-    { value: 'today_930_put_iv', label: 'Today 9:30 Put IV', category: 'Intraday' },
-    
-    // Greeks Fields
+    // Greeks Fields (Future use from LiveOptionStrikes)
     { value: 'call_delta', label: 'Call Delta', category: 'Greeks' },
     { value: 'put_delta', label: 'Put Delta', category: 'Greeks' },
     { value: 'call_gamma', label: 'Call Gamma', category: 'Greeks' },
@@ -535,26 +535,7 @@ const SimpleQueryBuilder: React.FC = () => {
     { value: 'call_theta', label: 'Call Theta', category: 'Greeks' },
     { value: 'put_theta', label: 'Put Theta', category: 'Greeks' },
     { value: 'call_vega', label: 'Call Vega', category: 'Greeks' },
-    { value: 'put_vega', label: 'Put Vega', category: 'Greeks' },
-    
-    // Volume & OI Fields
-    { value: 'call_volume', label: 'Call Volume', category: 'Volume' },
-    { value: 'put_volume', label: 'Put Volume', category: 'Volume' },
-    { value: 'total_volume', label: 'Total Volume', category: 'Volume' },
-    { value: 'call_oi', label: 'Call Open Interest', category: 'Volume' },
-    { value: 'put_oi', label: 'Put Open Interest', category: 'Volume' },
-    { value: 'total_oi', label: 'Total Open Interest', category: 'Volume' },
-    
-    // Price & Strike Fields
-    { value: 'strike_price', label: 'Strike Price', category: 'Price' },
-    { value: 'call_ltp', label: 'Call LTP', category: 'Price' },
-    { value: 'put_ltp', label: 'Put LTP', category: 'Price' },
-    { value: 'underlying_price', label: 'Underlying Price', category: 'Price' },
-    
-    // Statistical Fields
-    { value: 'similar_results_avg_iv', label: 'Similar Results Avg IV', category: 'Statistical' },
-    { value: 'iv_percentile', label: 'IV Percentile', category: 'Statistical' },
-    { value: 'iv_rank', label: 'IV Rank', category: 'Statistical' }
+    { value: 'put_vega', label: 'Put Vega', category: 'Greeks' }
   ];
 
   const operators = [
@@ -572,7 +553,7 @@ const SimpleQueryBuilder: React.FC = () => {
     setConditions([...conditions, {
       field1: 'current_call_iv',
       operator: 'gt',
-      field2: 'avg_21day_call_iv',
+      field2: 'similar_results_avg_iv',
       value: undefined
     }]);
   };
@@ -613,9 +594,24 @@ const SimpleQueryBuilder: React.FC = () => {
       
       console.log('✅ Query executed successfully:', response);
       
+      // Check data source and show appropriate message
+      if (response.dataSource === 'MOCK_DATA') {
+        console.log('📀 Using mock data:', response.noDataReason);
+        setError(`📀 Mock Data: ${response.message}`);
+      } else if (response.dataSource === 'REAL_DATABASE') {
+        console.log('📊 Real database data:', response.message);
+        setError(null);
+      }
+      
       // Set the results and debug info from backend response
       setResults(response.results);
-      setDebugInfo(response.debugInfo);
+      setDebugInfo({
+        ...response.debugInfo,
+        dataSource: response.dataSource,
+        noDataReason: response.noDataReason,
+        message: response.message,
+        originalError: response.originalError
+      });
       
     } catch (err: any) {
       console.error('❌ Query execution failed:', err);
@@ -862,7 +858,47 @@ const SimpleQueryBuilder: React.FC = () => {
                   </Tabs>
                   
                   {activeTab === 0 && (
-                    <TableContainer sx={{ maxHeight: 500 }}>
+                    <Box>
+                      {debugInfo && (
+                        <Box sx={{ mb: 2, p: 2, borderRadius: 2, bgcolor: 
+                          debugInfo.dataSource === 'MOCK_DATA' ? 'rgba(255, 193, 7, 0.1)' :
+                          debugInfo.dataSource === 'REAL_DATABASE' ? 'rgba(76, 175, 80, 0.1)' : 
+                          'rgba(244, 67, 54, 0.1)'
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Chip
+                              icon={
+                                debugInfo.dataSource === 'MOCK_DATA' ? <CloudOffIcon /> :
+                                debugInfo.dataSource === 'REAL_DATABASE' ? <CloudDoneIcon /> :
+                                <CloudOffIcon />
+                              }
+                              label={
+                                debugInfo.dataSource === 'MOCK_DATA' ? 'Mock Data' :
+                                debugInfo.dataSource === 'REAL_DATABASE' ? 'Real Database' :
+                                'Error'
+                              }
+                              color={
+                                debugInfo.dataSource === 'MOCK_DATA' ? 'warning' :
+                                debugInfo.dataSource === 'REAL_DATABASE' ? 'success' :
+                                'error'
+                              }
+                              sx={{ fontWeight: 600 }}
+                            />
+                            <Typography variant="body2" color="textSecondary">
+                              {debugInfo.message || 
+                                (debugInfo.dataSource === 'REAL_DATABASE' ? 
+                                'Data retrieved from actual database' : 
+                                'Mock data for demonstration')}
+                            </Typography>
+                          </Box>
+                          {debugInfo.noDataReason && (
+                            <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1, fontStyle: 'italic' }}>
+                              Reason: {debugInfo.noDataReason.replace(/_/g, ' ').toLowerCase()}
+                            </Typography>
+                          )}
+                        </Box>
+                      )}
+                      <TableContainer sx={{ maxHeight: 500 }}>
                       <Table stickyHeader size="small">
                         <TableHead>
                           <TableRow>
@@ -875,9 +911,25 @@ const SimpleQueryBuilder: React.FC = () => {
                         </TableHead>
                         <TableBody>
                           {results.map((row, index) => (
-                            <TableRow key={index} hover>
+                            <TableRow key={index} hover sx={{ 
+                              bgcolor: row._isMockData ? 'rgba(255, 193, 7, 0.1)' : 'inherit',
+                              border: row._isMockData ? '1px solid rgba(255, 193, 7, 0.3)' : 'none'
+                            }}>
                               <TableCell>
-                                <Typography variant="body2" sx={{ fontWeight: 600 }}>{row.symbol}</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                    {row.symbol}
+                                  </Typography>
+                                  {row._isMockData && (
+                                    <Chip 
+                                      label="MOCK" 
+                                      size="small" 
+                                      color="warning" 
+                                      variant="outlined"
+                                      sx={{ fontSize: '0.7rem', height: '18px' }}
+                                    />
+                                  )}
+                                </Box>
                               </TableCell>
                               <TableCell>
                                 <Chip 
@@ -916,6 +968,7 @@ const SimpleQueryBuilder: React.FC = () => {
                         </TableBody>
                       </Table>
                     </TableContainer>
+                    </Box>
                   )}
                   
                   {activeTab === 1 && debugInfo && (
@@ -924,9 +977,17 @@ const SimpleQueryBuilder: React.FC = () => {
                         <Box sx={{ flex: 1, minWidth: '300px' }}>
                           <Card variant="outlined">
                             <CardHeader
-                              avatar={<Avatar sx={{ bgcolor: 'primary.main' }}><CodeIcon /></Avatar>}
-                              title="Query Structure"
+                              avatar={
+                                <Avatar sx={{ 
+                                  bgcolor: debugInfo.dataSource === 'REAL_DATABASE' ? 'success.main' : 
+                                          debugInfo.dataSource === 'MOCK_DATA' ? 'warning.main' : 'error.main' 
+                                }}>
+                                  {debugInfo.dataSource === 'REAL_DATABASE' ? <CloudDoneIcon /> : <CloudOffIcon />}
+                                </Avatar>
+                              }
+                              title="Data Source & Query Structure"
                               titleTypographyProps={{ variant: 'h6' }}
+                              subheader={`Source: ${debugInfo.dataSource || 'Unknown'}`}
                             />
                             <CardContent>
                               <Typography variant="body2" color="textSecondary" gutterBottom>

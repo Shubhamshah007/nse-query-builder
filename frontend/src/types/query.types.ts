@@ -17,12 +17,10 @@ export enum LogicalOperator {
 export enum IVField {
   CURRENT_CALL_IV = 'current_call_iv',
   CURRENT_PUT_IV = 'current_put_iv',
-  AVG_7DAY_CALL_IV = 'avg_7day_call_iv',
-  AVG_21DAY_CALL_IV = 'avg_21day_call_iv',
-  AVG_90DAY_CALL_IV = 'avg_90day_call_iv',
   YESTERDAY_CLOSE_CALL_IV = 'yesterday_close_call_iv',
   TODAY_930_CALL_IV = 'today_930_call_iv',
   SIMILAR_RESULTS_AVG_IV = 'similar_results_avg_iv',
+  CURRENT_PRICE = 'current_price',
 }
 
 export enum FilterField {
@@ -31,6 +29,27 @@ export enum FilterField {
   INSTRUMENT_TYPE = 'instrument_type',
   RESULT_MONTH = 'result_month',
   IS_EXPIRY_WEEK = 'is_expiry_week',
+}
+
+// LiveOptionStrikes specific fields for future queries
+export enum OptionStrikeField {
+  STRIKE = 'strike',
+  CALL_LTP = 'call_ltp',
+  CALL_VOLUME = 'call_volume',
+  CALL_IV = 'call_iv',
+  CALL_DELTA = 'call_delta',
+  CALL_THETA = 'call_theta',
+  CALL_GAMMA = 'call_gamma',
+  CALL_VEGA = 'call_vega',
+  PUT_LTP = 'put_ltp',
+  PUT_VOLUME = 'put_volume',
+  PUT_IV = 'put_iv',
+  PUT_DELTA = 'put_delta',
+  PUT_THETA = 'put_theta',
+  PUT_GAMMA = 'put_gamma',
+  PUT_VEGA = 'put_vega',
+  IS_ATM = 'is_atm',
+  EXPIRY = 'expiry',
 }
 
 export enum FilterType {
@@ -111,12 +130,10 @@ export interface QueryTemplate {
 export const IV_FIELD_LABELS = {
   [IVField.CURRENT_CALL_IV]: 'Current Call IV',
   [IVField.CURRENT_PUT_IV]: 'Current Put IV',
-  [IVField.AVG_7DAY_CALL_IV]: '7-Day Avg Call IV',
-  [IVField.AVG_21DAY_CALL_IV]: '21-Day Avg Call IV',
-  [IVField.AVG_90DAY_CALL_IV]: '90-Day Avg Call IV',
   [IVField.YESTERDAY_CLOSE_CALL_IV]: 'Yesterday Close Call IV',
   [IVField.TODAY_930_CALL_IV]: 'Today 9:30 AM Call IV',
   [IVField.SIMILAR_RESULTS_AVG_IV]: 'Similar Results Avg IV',
+  [IVField.CURRENT_PRICE]: 'Current Price',
 };
 
 export const OPERATOR_LABELS = {
@@ -136,4 +153,24 @@ export const FILTER_FIELD_LABELS = {
   [FilterField.INSTRUMENT_TYPE]: 'Instrument Type',
   [FilterField.RESULT_MONTH]: 'Result Month',
   [FilterField.IS_EXPIRY_WEEK]: 'Is Expiry Week',
+};
+
+export const OPTION_STRIKE_FIELD_LABELS = {
+  [OptionStrikeField.STRIKE]: 'Strike Price',
+  [OptionStrikeField.CALL_LTP]: 'Call Last Traded Price',
+  [OptionStrikeField.CALL_VOLUME]: 'Call Volume',
+  [OptionStrikeField.CALL_IV]: 'Call Implied Volatility',
+  [OptionStrikeField.CALL_DELTA]: 'Call Delta',
+  [OptionStrikeField.CALL_THETA]: 'Call Theta',
+  [OptionStrikeField.CALL_GAMMA]: 'Call Gamma',
+  [OptionStrikeField.CALL_VEGA]: 'Call Vega',
+  [OptionStrikeField.PUT_LTP]: 'Put Last Traded Price',
+  [OptionStrikeField.PUT_VOLUME]: 'Put Volume',
+  [OptionStrikeField.PUT_IV]: 'Put Implied Volatility',
+  [OptionStrikeField.PUT_DELTA]: 'Put Delta',
+  [OptionStrikeField.PUT_THETA]: 'Put Theta',
+  [OptionStrikeField.PUT_GAMMA]: 'Put Gamma',
+  [OptionStrikeField.PUT_VEGA]: 'Put Vega',
+  [OptionStrikeField.IS_ATM]: 'Is At-The-Money',
+  [OptionStrikeField.EXPIRY]: 'Expiry Date',
 };

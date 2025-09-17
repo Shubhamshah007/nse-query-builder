@@ -254,9 +254,40 @@ export class QueryBuilderController {
   
   @Post('execute')
   async executeSimpleQuery(@Body() body: any): Promise<any> {
-    console.log('🚀 Received simple query:', JSON.stringify(body, null, 2));
+    console.log('🚀 Received query:', JSON.stringify(body, null, 2));
     
     try {
+      // Handle DynamicQuery format from frontend (has groups property)
+      if (body.groups && Array.isArray(body.groups) && body.groups[0]?.conditions) {
+        console.log('🟡 Processing DynamicQuery format from frontend');
+        
+        // Extract the first condition from the DynamicQuery format
+        const condition = body.groups[0].conditions[0];
+        
+        // Convert backend operator format to simple format
+        const operatorMap: { [key: string]: string } = {
+          'GREATER_THAN': 'gt',
+          'LESS_THAN': 'lt',
+          'EQUALS': 'eq',
+          'GREATER_THAN_OR_EQUAL': 'gte',
+          'LESS_THAN_OR_EQUAL': 'lte',
+          'NOT_EQUALS': 'ne'
+        };
+        
+        const simpleCondition = {
+          field1: condition.field1,
+          operator: operatorMap[condition.operator] || 'gt',
+          field2: condition.field2,
+          value: condition.value,
+          percentageThreshold: condition.percentageThreshold
+        };
+        
+        console.log('🔄 Converted to simple condition:', simpleCondition);
+        
+        // Process as if it was a simple array
+        body = [simpleCondition];
+      }
+      
       // If it's a simple conditions array, execute directly via QueryBuilderService
       if (Array.isArray(body)) {
         const condition = body[0]; // Take first condition for now
@@ -301,6 +332,28 @@ export class QueryBuilderController {
           const results = await this.queryBuilderService.marketSummaryRepository.query(sql);
           const executionTime = Date.now() - startTime;
           
+          // If no data found, return empty results
+          if (results.length === 0) {
+            console.log('ℹ️ No data found in database, returning empty results');
+            
+            return {
+              results: [],
+              debugInfo: {
+                queryObject: { conditions: body },
+                sqlQuery: sql,
+                executionTime,
+                appliedFilters: [{
+                  field: condition.field1,
+                  operator: condition.operator,
+                  value: condition.field2
+                }],
+                queryComplexity: 'Simple',
+                tablesUsed: ['market_summary'],
+                indexesUsed: ['idx_symbol']
+              }
+            };
+          }
+          
           return {
             results: results.map((row: any) => ({
               symbol: row.symbol,
@@ -312,6 +365,8 @@ export class QueryBuilderController {
               difference: row.difference,
               percentageChange: row.percentageChange
             })),
+            dataSource: 'REAL_DATABASE',
+            message: `Found ${results.length} matching records from database.`,
             debugInfo: {
               queryObject: { conditions: body },
               sqlQuery: sql,
@@ -323,7 +378,8 @@ export class QueryBuilderController {
               }],
               queryComplexity: 'Simple',
               tablesUsed: ['market_summary'],
-              indexesUsed: ['idx_symbol']
+              indexesUsed: ['idx_symbol'],
+              databaseStatus: 'CONNECTED_WITH_DATA'
             }
           };
         }
@@ -363,6 +419,28 @@ export class QueryBuilderController {
           const results = await this.queryBuilderService.marketSummaryRepository.query(sql);
           const executionTime = Date.now() - startTime;
           
+          // If no data found, return empty results
+          if (results.length === 0) {
+            console.log('ℹ️ No data found for value-based query, returning empty results');
+            
+            return {
+              results: [],
+              debugInfo: {
+                queryObject: { conditions: body },
+                sqlQuery: sql,
+                executionTime,
+                appliedFilters: [{
+                  field: condition.field1,
+                  operator: condition.operator,
+                  value: condition.value
+                }],
+                queryComplexity: 'Simple',
+                tablesUsed: ['market_summary'],
+                indexesUsed: ['idx_symbol']
+              }
+            };
+          }
+          
           return {
             results: results.map((row: any) => ({
               symbol: row.symbol,
@@ -373,6 +451,8 @@ export class QueryBuilderController {
               difference: row.difference,
               percentageChange: 0
             })),
+            dataSource: 'REAL_DATABASE',
+            message: `Found ${results.length} matching records from database.`,
             debugInfo: {
               queryObject: { conditions: body },
               sqlQuery: sql,
@@ -384,7 +464,8 @@ export class QueryBuilderController {
               }],
               queryComplexity: 'Simple',
               tablesUsed: ['market_summary'],
-              indexesUsed: ['idx_symbol']
+              indexesUsed: ['idx_symbol'],
+              databaseStatus: 'CONNECTED_WITH_DATA'
             }
           };
         }
@@ -401,8 +482,17 @@ export class QueryBuilderController {
       console.error('❌ Simple query execution failed:', error.message);
       console.error('❌ Stack trace:', error.stack);
       
+      // Return error response for database failures
       return {
         error: true,
+        message: `Database query failed: ${error.message}`,
+        results: [],
+        receivedBody: body
+      };
+      
+      return {
+        error: true,
+        dataSource: 'ERROR_NO_FALLBACK',
         message: error.message,
         stack: error.stack,
         receivedBody: body
@@ -423,6 +513,7 @@ export class QueryBuilderController {
     };
     return operatorMap[operator] || 'GREATER_THAN';
   }
+
   
   @Post('dynamic/execute')
   async executeDynamicQuery(@Body() query: any): Promise<QueryExecutionResponse> {
@@ -466,12 +557,10 @@ export class QueryBuilderController {
         ivFields: [
           'current_call_iv',
           'current_put_iv', 
-          'avg_7day_call_iv',
-          'avg_21day_call_iv',
-          'avg_90day_call_iv',
           'yesterday_close_call_iv',
           'today_930_call_iv',
-          'similar_results_avg_iv'
+          'similar_results_avg_iv',
+          'current_price'
         ],
         filterFields: [
           'symbol',
@@ -479,6 +568,25 @@ export class QueryBuilderController {
           'instrument_type',
           'result_month',
           'is_expiry_week'
+        ],
+        optionStrikeFields: [
+          'strike',
+          'call_ltp',
+          'call_volume',
+          'call_iv',
+          'call_delta',
+          'call_theta',
+          'call_gamma',
+          'call_vega',
+          'put_ltp',
+          'put_volume',
+          'put_iv',
+          'put_delta',
+          'put_theta',
+          'put_gamma',
+          'put_vega',
+          'is_atm',
+          'expiry'
         ],
         operators: [
           'gt', 'lt', 'gte', 'lte', 'eq', 'ne', 'pct_gt', 'pct_lt'
@@ -490,7 +598,7 @@ export class QueryBuilderController {
           conditions: [{
             field1: 'current_call_iv',
             operator: 'pct_gt',
-            field2: 'avg_21day_call_iv',
+            field2: 'similar_results_avg_iv',
             percentageThreshold: 20
           }],
           filters: [{
@@ -504,7 +612,49 @@ export class QueryBuilderController {
         sortBy: 'percentageChange',
         sortOrder: 'DESC',
         limit: 50
-      }
+      },
+      futureQueries: [
+        {
+          category: 'LiveOptionStrikes Integration',
+          description: 'Future queries that will join market_summary with live_option_strikes table',
+          queries: [
+            {
+              endpoint: '/query-builder/future/high-volume-iv-spikes',
+              description: 'Stocks with high option volume and IV spikes (joins market_summary + live_option_strikes)',
+              status: 'Available for implementation'
+            },
+            {
+              endpoint: '/query-builder/future/atm-options-analysis',
+              description: 'ATM options analysis with current IV comparison',
+              status: 'Available for implementation'
+            },
+            {
+              endpoint: '/query-builder/future/high-delta-gamma-options',
+              description: 'Options with high delta and gamma values',
+              status: 'Available for implementation'
+            }
+          ]
+        }
+      ]
     };
+  }
+
+  // =============================================================
+  // FUTURE ENDPOINTS - LiveOptionStrikes Integration
+  // =============================================================
+  
+  @Get('future/high-volume-iv-spikes')
+  async getHighVolumeIvSpikes(): Promise<any[]> {
+    return this.queryBuilderService.getHighVolumeIvSpikes();
+  }
+
+  @Get('future/atm-options-analysis')
+  async getAtmOptionsAnalysis(): Promise<any[]> {
+    return this.queryBuilderService.getAtmOptionsAnalysis();
+  }
+
+  @Get('future/high-delta-gamma-options')
+  async getHighDeltaGammaOptions(): Promise<any[]> {
+    return this.queryBuilderService.getHighDeltaGammaOptions();
   }
 }
