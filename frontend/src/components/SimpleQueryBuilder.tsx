@@ -860,42 +860,18 @@ const SimpleQueryBuilder: React.FC = () => {
                   {activeTab === 0 && (
                     <Box>
                       {debugInfo && (
-                        <Box sx={{ mb: 2, p: 2, borderRadius: 2, bgcolor: 
-                          debugInfo.dataSource === 'MOCK_DATA' ? 'rgba(255, 193, 7, 0.1)' :
-                          debugInfo.dataSource === 'REAL_DATABASE' ? 'rgba(76, 175, 80, 0.1)' : 
-                          'rgba(244, 67, 54, 0.1)'
-                        }}>
+                        <Box sx={{ mb: 2, p: 2, borderRadius: 2, bgcolor: 'rgba(76, 175, 80, 0.1)' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Chip
-                              icon={
-                                debugInfo.dataSource === 'MOCK_DATA' ? <CloudOffIcon /> :
-                                debugInfo.dataSource === 'REAL_DATABASE' ? <CloudDoneIcon /> :
-                                <CloudOffIcon />
-                              }
-                              label={
-                                debugInfo.dataSource === 'MOCK_DATA' ? 'Mock Data' :
-                                debugInfo.dataSource === 'REAL_DATABASE' ? 'Real Database' :
-                                'Error'
-                              }
-                              color={
-                                debugInfo.dataSource === 'MOCK_DATA' ? 'warning' :
-                                debugInfo.dataSource === 'REAL_DATABASE' ? 'success' :
-                                'error'
-                              }
+                              icon={<CloudDoneIcon />}
+                              label="Database Query"
+                              color="success"
                               sx={{ fontWeight: 600 }}
                             />
                             <Typography variant="body2" color="textSecondary">
-                              {debugInfo.message || 
-                                (debugInfo.dataSource === 'REAL_DATABASE' ? 
-                                'Data retrieved from actual database' : 
-                                'Mock data for demonstration')}
+                              Query executed successfully
                             </Typography>
                           </Box>
-                          {debugInfo.noDataReason && (
-                            <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1, fontStyle: 'italic' }}>
-                              Reason: {debugInfo.noDataReason.replace(/_/g, ' ').toLowerCase()}
-                            </Typography>
-                          )}
                         </Box>
                       )}
                       <TableContainer sx={{ maxHeight: 500 }}>
@@ -911,25 +887,11 @@ const SimpleQueryBuilder: React.FC = () => {
                         </TableHead>
                         <TableBody>
                           {results.map((row, index) => (
-                            <TableRow key={index} hover sx={{ 
-                              bgcolor: row._isMockData ? 'rgba(255, 193, 7, 0.1)' : 'inherit',
-                              border: row._isMockData ? '1px solid rgba(255, 193, 7, 0.3)' : 'none'
-                            }}>
+                            <TableRow key={index} hover>
                               <TableCell>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                    {row.symbol}
-                                  </Typography>
-                                  {row._isMockData && (
-                                    <Chip 
-                                      label="MOCK" 
-                                      size="small" 
-                                      color="warning" 
-                                      variant="outlined"
-                                      sx={{ fontSize: '0.7rem', height: '18px' }}
-                                    />
-                                  )}
-                                </Box>
+                                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                  {row.symbol}
+                                </Typography>
                               </TableCell>
                               <TableCell>
                                 <Chip 
@@ -978,16 +940,13 @@ const SimpleQueryBuilder: React.FC = () => {
                           <Card variant="outlined">
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ 
-                                  bgcolor: debugInfo.dataSource === 'REAL_DATABASE' ? 'success.main' : 
-                                          debugInfo.dataSource === 'MOCK_DATA' ? 'warning.main' : 'error.main' 
-                                }}>
-                                  {debugInfo.dataSource === 'REAL_DATABASE' ? <CloudDoneIcon /> : <CloudOffIcon />}
+                                <Avatar sx={{ bgcolor: 'success.main' }}>
+                                  <CloudDoneIcon />
                                 </Avatar>
                               }
-                              title="Data Source & Query Structure"
+                              title="Query Structure"
                               titleTypographyProps={{ variant: 'h6' }}
-                              subheader={`Source: ${debugInfo.dataSource || 'Unknown'}`}
+                              subheader="Database Query Executed"
                             />
                             <CardContent>
                               <Typography variant="body2" color="textSecondary" gutterBottom>

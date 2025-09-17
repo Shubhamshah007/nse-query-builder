@@ -100,13 +100,36 @@ export interface QueryResult {
   sector: string;
   instrumentType: string;
   currentCallIv: number;
-  currentPutIv: number;
-  comparisonField: string;
+  currentPutIv?: number;
+  comparisonField?: string;
   comparisonValue: number;
   difference: number;
   percentageChange: number;
   resultMonth?: string;
-  isExpiryWeek: boolean;
+  isExpiryWeek?: boolean;
+  // Simple Query Builder specific fields
+  field1Value?: number;
+  field1Label?: string;
+  field2Value?: number;
+  field2Label?: string;
+}
+
+// Backend response format for Simple Query Builder
+export interface SimpleQueryResponse {
+  results: QueryResult[];
+  debugInfo?: {
+    queryObject: any;
+    sqlQuery: string;
+    executionTime: number;
+    appliedFilters: Array<{
+      field: string;
+      operator: string;
+      value: string | number;
+    }>;
+    queryComplexity: 'Simple' | 'Moderate' | 'Complex';
+    tablesUsed: string[];
+    indexesUsed: string[];
+  };
 }
 
 export interface QueryExecutionResponse {
