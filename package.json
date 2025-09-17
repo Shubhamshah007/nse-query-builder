@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build",
     "build:prod": "nest build",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "vercel-build": "cd frontend && npm install && npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

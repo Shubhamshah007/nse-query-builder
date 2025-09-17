@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: nse-query-builder-backend
+    runtime: node
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build:prod
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: nse-database
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: nse-database  
+          property: port
+      - key: DATABASE_USER
+        fromDatabase:
+          name: nse-database
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: nse-database
+          property: password
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: nse-database
+          property: database
+    healthCheckPath: /query-builder/available-queries
+
+databases:
+  - name: nse-database
+    databaseName: nse_options_db
+    user: nse_user
+    plan: free
