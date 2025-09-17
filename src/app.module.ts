@@ -22,7 +22,7 @@ import { OptionsModule } from './options/options.module';
             type: 'postgres',
             url: process.env.DATABASE_URL,
             entities: [Stock, PriceData, MarketIndex, IndexData, LatestData, LiveInstrumentData, LiveOptionStrikes, MarketSummary],
-            synchronize: false,
+            synchronize: true, // Temporarily enable to create tables
             logging: process.env.DATABASE_LOGGING === 'true',
             ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
           }
