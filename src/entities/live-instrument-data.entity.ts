@@ -22,10 +22,10 @@ export class LiveInstrumentData {
   @Column({ length: 32 })
   segment: string;
 
-  @Column('double', { nullable: true, name: 'underlying_price' })
+  @Column('float', { nullable: true, name: 'underlying_price' })
   underlyingPrice: number;
 
-  @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
 
   @Column({ length: 32, nullable: true })
@@ -34,6 +34,6 @@ export class LiveInstrumentData {
   @Column({ length: 16, nullable: true, default: 'success', name: 'data_status' })
   dataStatus: string;
 
-  @Column('double', { nullable: true, name: 'fetch_duration' })
+  @Column('float', { nullable: true, name: 'fetch_duration' })
   fetchDuration: number;
 }

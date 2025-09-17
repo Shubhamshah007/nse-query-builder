@@ -22,11 +22,11 @@ export class LiveOptionStrikes {
   @Column({ length: 32 })
   symbol: string;
 
-  @Column('double')
+  @Column('float')
   strike: number;
 
   // Call Options Data
-  @Column('double', { nullable: true, default: 0, name: 'call_ltp' })
+  @Column('float', { nullable: true, default: 0, name: 'call_ltp' })
   callLtp: number;
 
   @Column('bigint', { nullable: true, default: 0, name: 'call_oi' })
@@ -35,23 +35,23 @@ export class LiveOptionStrikes {
   @Column('bigint', { nullable: true, default: 0, name: 'call_volume' })
   callVolume: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'call_iv' })
+  @Column('float', { nullable: true, default: 0, name: 'call_iv' })
   callIv: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'call_delta' })
+  @Column('float', { nullable: true, default: 0, name: 'call_delta' })
   callDelta: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'call_theta' })
+  @Column('float', { nullable: true, default: 0, name: 'call_theta' })
   callTheta: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'call_gamma' })
+  @Column('float', { nullable: true, default: 0, name: 'call_gamma' })
   callGamma: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'call_vega' })
+  @Column('float', { nullable: true, default: 0, name: 'call_vega' })
   callVega: number;
 
   // Put Options Data
-  @Column('double', { nullable: true, default: 0, name: 'put_ltp' })
+  @Column('float', { nullable: true, default: 0, name: 'put_ltp' })
   putLtp: number;
 
   @Column('bigint', { nullable: true, default: 0, name: 'put_oi' })
@@ -60,19 +60,19 @@ export class LiveOptionStrikes {
   @Column('bigint', { nullable: true, default: 0, name: 'put_volume' })
   putVolume: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'put_iv' })
+  @Column('float', { nullable: true, default: 0, name: 'put_iv' })
   putIv: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'put_delta' })
+  @Column('float', { nullable: true, default: 0, name: 'put_delta' })
   putDelta: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'put_theta' })
+  @Column('float', { nullable: true, default: 0, name: 'put_theta' })
   putTheta: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'put_gamma' })
+  @Column('float', { nullable: true, default: 0, name: 'put_gamma' })
   putGamma: number;
 
-  @Column('double', { nullable: true, default: 0, name: 'put_vega' })
+  @Column('float', { nullable: true, default: 0, name: 'put_vega' })
   putVega: number;
 
   @Column('date', { name: 'Date' })
