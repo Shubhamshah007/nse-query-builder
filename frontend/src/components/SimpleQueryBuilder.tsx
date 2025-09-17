@@ -594,24 +594,10 @@ const SimpleQueryBuilder: React.FC = () => {
       
       console.log('✅ Query executed successfully:', response);
       
-      // Check data source and show appropriate message
-      if (response.dataSource === 'MOCK_DATA') {
-        console.log('📀 Using mock data:', response.noDataReason);
-        setError(`📀 Mock Data: ${response.message}`);
-      } else if (response.dataSource === 'REAL_DATABASE') {
-        console.log('📊 Real database data:', response.message);
-        setError(null);
-      }
-      
       // Set the results and debug info from backend response
       setResults(response.results);
-      setDebugInfo({
-        ...response.debugInfo,
-        dataSource: response.dataSource,
-        noDataReason: response.noDataReason,
-        message: response.message,
-        originalError: response.originalError
-      });
+      setDebugInfo(response.debugInfo);
+      setError(null);
       
     } catch (err: any) {
       console.error('❌ Query execution failed:', err);
