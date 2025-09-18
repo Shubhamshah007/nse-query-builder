@@ -539,7 +539,7 @@ export class QueryBuilderController {
               comparisonField: condition.field2,
               comparisonValue: row.comparisonValue,
               difference: row.difference,
-              percentageChange: row.percentageChange
+              percentageChange: row.percentagechange
             })),
             dataSource: 'REAL_DATABASE',
             message: `Found ${results.length} matching records from database.`,
