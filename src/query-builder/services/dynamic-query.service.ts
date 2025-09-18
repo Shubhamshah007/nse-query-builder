@@ -219,11 +219,11 @@ export class DynamicQueryService {
           fields.add(`${condition.field2} as comparisonValue`);
           fields.add(`(${condition.field1} - ${condition.field2}) as difference`);
           
-          // Add percentage change calculation
+          // Add percentage change calculation (PostgreSQL case-sensitive fix)
           const percentageCalc = `CASE 
             WHEN ${condition.field2} > 0 THEN ((${condition.field1} - ${condition.field2}) / ${condition.field2} * 100)
             ELSE 0 
-          END as percentageChange`;
+          END as "percentageChange"`;
           fields.add(percentageCalc);
         }
       }
