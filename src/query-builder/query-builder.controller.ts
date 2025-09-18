@@ -483,7 +483,7 @@ export class QueryBuilderController {
               CASE 
                 WHEN ${condition.field2} > 0 THEN ((${condition.field1} - ${condition.field2}) / ${condition.field2} * 100)
                 ELSE 0 
-              END as "percentageChange",
+              END as percentagechange,
               instrument_type as instrumentType
             FROM market_summary 
             WHERE `;
@@ -503,7 +503,7 @@ export class QueryBuilderController {
               sql += `${condition.field1} > ${condition.field2}`;
           }
           
-          sql += ` AND instrument_type = 'STOCK' ORDER BY ABS("percentageChange") DESC LIMIT 50`;
+          sql += ` AND instrument_type = 'STOCK' ORDER BY ABS(percentagechange) DESC LIMIT 50`;
           
           const results = await this.queryBuilderService.marketSummaryRepository.query(sql);
           const executionTime = Date.now() - startTime;
