@@ -6,7 +6,7 @@ import {
 } from '../types/query.types';
 
 const API_BASE_URL = import.meta.env.PROD 
-  ? import.meta.env.VITE_API_URL || 'https://your-backend-url.render.com'
+  ? import.meta.env.VITE_API_URL || 'https://nse-query-builder-backend.onrender.com'
   : 'http://localhost:3000';
 
 const api = axios.create({
