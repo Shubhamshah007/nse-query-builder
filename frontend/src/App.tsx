@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import SimpleQueryBuilder from './components/SimpleQueryBuilder';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 const theme = createTheme({
   palette: {
@@ -25,10 +26,12 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SimpleQueryBuilder />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SimpleQueryBuilder />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

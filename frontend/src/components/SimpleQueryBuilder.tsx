@@ -569,6 +569,8 @@ const SimpleQueryBuilder: React.FC = () => {
   };
 
   const executeQuery = async () => {
+    console.log('🚀 Execute button clicked');
+    
     if (conditions.length === 0) {
       setError('Please add at least one condition');
       return;
@@ -578,7 +580,29 @@ const SimpleQueryBuilder: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🚀 Executing query with conditions:', conditions);
+      console.log('🔍 Validating conditions:', conditions);
+      
+      // Validate conditions before sending
+      const invalidConditions = conditions.filter(condition => {
+        if (!condition.field1 || !condition.operator) {
+          return true;
+        }
+        if (['pct_gt', 'pct_lt'].includes(condition.operator)) {
+          return !condition.percentageThreshold && condition.percentageThreshold !== 0;
+        }
+        if (!condition.field2 && (!condition.value && condition.value !== 0)) {
+          return true;
+        }
+        return false;
+      });
+      
+      if (invalidConditions.length > 0) {
+        setError('❌ Please complete all condition fields before executing.');
+        setLoading(false);
+        return;
+      }
+      
+      console.log('🚀 Executing query with validated conditions:', conditions);
       
       // Convert conditions to SimpleQueryCondition format for API
       const apiConditions: SimpleQueryCondition[] = conditions.map(condition => ({
@@ -589,26 +613,54 @@ const SimpleQueryBuilder: React.FC = () => {
         percentageThreshold: condition.percentageThreshold
       }));
       
+      console.log('📡 Calling API with conditions:', apiConditions);
+      
       // Call the real backend API
       const response = await queryAPI.executeSimpleQuery(apiConditions);
       
-      console.log('✅ Query executed successfully:', response);
+      console.log('✅ Raw API response:', response);
+      
+      // Validate response structure
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response format from API');
+      }
+      
+      // Handle case where response.results might be undefined or null
+      const results = Array.isArray(response.results) ? response.results : [];
+      const debugInfo = response.debugInfo || null;
+      
+      console.log('📊 Processed results:', results);
+      console.log('🐛 Debug info:', debugInfo);
       
       // Set the results and debug info from backend response
-      setResults(response.results);
-      setDebugInfo(response.debugInfo);
+      setResults(results);
+      setDebugInfo(debugInfo);
       setError(null);
+      
+      // Switch to results tab if we have results
+      if (results.length > 0) {
+        setActiveTab(0);
+      }
       
     } catch (err: any) {
       console.error('❌ Query execution failed:', err);
+      console.error('❌ Error stack:', err.stack);
       
       // Show user-friendly error message
-      const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
+      let errorMessage = 'Unknown error occurred';
+      
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
       
       if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('Network Error')) {
         setError('❌ Backend server is not running. Please start the backend server first.');
       } else if (errorMessage.includes('CORS')) {
         setError('❌ CORS error. Backend CORS configuration may need updating.');
+      } else if (errorMessage.includes('fetch')) {
+        setError('❌ Network error: Unable to connect to backend server.');
       } else {
         setError(`❌ Query failed: ${errorMessage}`);
       }
@@ -618,6 +670,7 @@ const SimpleQueryBuilder: React.FC = () => {
       setDebugInfo(null);
     } finally {
       setLoading(false);
+      console.log('🏁 Query execution completed');
     }
   };
 
@@ -775,7 +828,12 @@ const SimpleQueryBuilder: React.FC = () => {
                 <Button
                   variant="contained"
                   startIcon={<PlayArrowIcon />}
-                  onClick={executeQuery}
+                  onClick={(e) => {
+                    console.log('🖱️ Execute button clicked, event:', e);
+                    console.log('📊 Current conditions:', conditions);
+                    console.log('🔄 Current loading state:', loading);
+                    executeQuery();
+                  }}
                   disabled={loading || conditions.length === 0}
                   sx={{ 
                     bgcolor: '#667eea',
